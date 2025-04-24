@@ -53,34 +53,34 @@ class processor:
 
     # Using X API to fetch user tweets
     def fetchTweets(self) -> list:
-        user_tweets =  [{'created_at':'2025-04-22 14:27:35',
-                        'tweet_text':'ths is the man he said that kills $Ray $Sol $jup'},
-                        {'created_at':'2025-04-23 14:27:35',
-                        'tweet_text':'ths is the man he said that kills $bonk $jto'}
-                        ]
-        # user_tweets = []
-        # try:
-        #     for response in tweepy.Paginator(self.client.get_users_tweets,
-        #                                     id=self.user_id,
-        #                                     start_time=self.start_date, 
-        #                                     end_time=self.end_date,
-        #                                     exclude='replies',
-        #                                     max_results=100,
-        #                                     limit=1, # consider this
-        #                                     tweet_fields='created_at'):
-        #         if response.data:
-        #             for tweet in response.data:
-        #                 tweet_dict = {
-        #                     'tweet_id':tweet.id,
-        #                     'tweet_text':tweet.text,
-        #                     'created_at':tweet.created_at.strftime("%Y-%m-%d %H:%M:%S")
-        #                 }
-        #                 user_tweets.append(tweet_dict)
-        #     #print(user_tweets)
-        #     return user_tweets
-        # except Exception as e:
-        #     Error_message = {'Error':f'Failed To Fetch Tweets Because of  {e}\nUpgrade Your X Developer Plan or Wait For Sometimes'}
-        #     return Error_message
+        # user_tweets =  [{'created_at':'2025-04-22 14:27:35',
+        #                 'tweet_text':'ths is the man he said that kills $Ray $Sol $jup'},
+        #                 {'created_at':'2025-04-23 14:27:35',
+        #                 'tweet_text':'ths is the man he said that kills $bonk $jto'}
+        #                 ]
+        user_tweets = []
+        try:
+            for response in tweepy.Paginator(self.client.get_users_tweets,
+                                            id=self.user_id,
+                                            start_time=self.start_date, 
+                                            end_time=self.end_date,
+                                            exclude='replies',
+                                            max_results=100,
+                                            limit=1, # consider this
+                                            tweet_fields='created_at'):
+                if response.data:
+                    for tweet in response.data:
+                        tweet_dict = {
+                            'tweet_id':tweet.id,
+                            'tweet_text':tweet.text,
+                            'created_at':tweet.created_at.strftime("%Y-%m-%d %H:%M:%S")
+                        }
+                        user_tweets.append(tweet_dict)
+            #print(user_tweets)
+            return user_tweets
+        except Exception as e:
+            Error_message = {'Error':f'Failed To Fetch Tweets Because of  {e}\nUpgrade Your X Developer Plan or Wait For Sometimes'}
+            return Error_message
         return user_tweets
         
     # format the data to a suitable data type
