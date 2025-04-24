@@ -51,7 +51,7 @@ class processor:
     # Using X API to fetch user tweets
     def fetchTweets(self) -> list:
         user_tweets =  [{'created_at':'2025-04-22 14:27:35',
-                        'tweet_text':'ths is the man he said that kills $Ray $Sol'}
+                        'tweet_text':'ths is the man he said that kills $Ray '}
                         ]
         # user_tweets = []
         # try:
