@@ -1,4 +1,5 @@
 import requests
+import streamlit as st
 
 pair =  "Czfq3xZZDmsdGdUyrNLtRhGc47cXcZtLG4crryfu44zE"
 from_date = '2025-04-22' 
