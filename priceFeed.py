@@ -11,7 +11,6 @@ import streamlit as st
 #     moralis = keys['moralis']
 
 moralis = st.secrets['moralis_key']
-moralis = 'eyJub25jZSI6IjBmZjJiMGYxLTE4ZDctNDFkMi05OGM1LTllZmYxOTNmZDJmZSIsIm9yZ0lkIjoiMzU3MTg0IiwidXNlcklkIjoiMzY3MDk3IiwidHlwZSI6IlBST0pFQ1QiLCJ0eXBlSWQiOiJmYWQ3ZWQ2ZC0wODk0LTRiZjUtODBhNS0zZTQwYzZkMDZkODciLCJpYXQiOjE2OTQ3MTk5MDYsImV4cCI6NDg1MDQ3OTkwNn0'
 
 class price_with_interval:
     def __init__(self):
@@ -23,7 +22,6 @@ def fetchPrice(pair,tweetDate,time_frame,timeframe_prices,get_start_price=None):
     new_date = date_obj + timedelta(days=1)
     to_date = new_date.strftime('%Y-%m-%d')
     
-    # DeAWLtRGAqCW7imV1jSC9NZkRKKGStFC1U7eDFBRxryR
     url = f"https://solana-gateway.moralis.io/token/mainnet/pairs/{pair}/ohlcv?timeframe=5min&currency=usd&fromDate={from_date}&toDate={to_date}&limit=1000"
 
     headers = {
