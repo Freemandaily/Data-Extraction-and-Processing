@@ -10,7 +10,7 @@ url = f"https://solana-gateway.moralis.io/token/mainnet/pairs/{pair}/ohlcv?timef
 
 headers = {
 "Accept": "application/json",
-"X-API-Key": f"{moralis}"
+"X-API-Key": moralis
 }
   
 response = requests.request("GET", url, headers=headers)
