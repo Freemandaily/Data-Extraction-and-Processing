@@ -48,6 +48,7 @@ def fetchPrice(pair,tweetDate,time_frame,timeframe_prices,get_start_price=None):
                 high_price = price_data['high']
                 low_price = price_data['low']
                 close_price = price_data['close']
+                st.write(close)
                 return close_price
 
     except Exception as e:
