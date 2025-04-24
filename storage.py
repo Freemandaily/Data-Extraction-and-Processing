@@ -6,6 +6,7 @@ import streamlit as st
 
 def add_to_csv(Influencer_name:str,tweeted_token:dict)->None:
     tweeted_token = { date:value for date,value in tweeted_token.items() if value}
+    st.write(tweeted_token)
     if tweeted_token:
         st.toast('Adding Tweeted Token Data To Cvs File!')
         print('Adding Tweeted Token Data To Cvs File!')
