@@ -8,6 +8,7 @@ import streamlit as st
 
 moralis = st.secrets['moralis_key']
 
+
 class price_with_interval:
     def __init__(self):
         self.token_interval_prices = []
@@ -25,6 +26,8 @@ def fetchPrice(pair,tweetDate,time_frame,timeframe_prices,get_start_price=None):
     "Accept": "application/json",
     "X-API-Key": f"{moralis}"
     }
+    st.write(moralis)
+    print(moralis)
     try:
         if not timeframe_prices.token_interval_prices:
             response = requests.request("GET", url, headers=headers)
