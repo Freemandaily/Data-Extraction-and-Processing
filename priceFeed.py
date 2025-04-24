@@ -6,7 +6,7 @@ from storage import add_to_csv
 import streamlit as st
 
 
-moralis = os.environ.get('moralis')
+moralis = os.environ.get('MORALIS')
 
 class price_with_interval:
     def __init__(self):
