@@ -14,8 +14,8 @@ This is an analyst Module Which serves the purpose of extracting  and Processing
 - **tweepy X library : ```pip install tweepy```**
 - **pandas library: ```pip install pandas```**
 - **pytz library : ```pip install pytz```**<br>
-  Add the Bearer Token and moralis Api key into the ```key.json``` file** 
-
+- **streamlit :```pip install streamlit```***
+  
 
 ### Usage
 - **Run ```python3 main.py```**
