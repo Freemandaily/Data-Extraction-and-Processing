@@ -44,12 +44,12 @@ if st.button('Analyse Tweet'):
         st.error('Please Enter A Username')
         st.stop()
     else:
-        # with st.spinner(f'Loading @{username} Handle'):
-        #     userHandler = process.Load_user(username,timeframe=timeframe) 
-        # if 'Error' in userHandler:
-        #     st.error(userHandler['Error'])
-        #     st.stop() 
-        pass
+        with st.spinner(f'Loading @{username} Handle'):
+            userHandler = process.Load_user(username,timeframe=timeframe) 
+        if 'Error' in userHandler:
+            st.error(userHandler['Error'])
+            st.stop() 
+        # pass
             
     with st.spinner(f'Processing @{username} Tweets'):
         tweeted_token_details = process.processTweets()
