@@ -56,6 +56,7 @@ def fetchPrice(pair,tweetDate,time_frame,timeframe_prices,get_start_price=None):
                 return close_price
             else:
                 st.write('opps')
+        
 
     except Exception as e:
         st.error('Failed To Fetch Token Price Data')
@@ -63,6 +64,7 @@ def fetchPrice(pair,tweetDate,time_frame,timeframe_prices,get_start_price=None):
         time.sleep(10)
         # print(f'Failed To Fetch Token Price Data')
         st.stop()
+    st.write('opps')
     
 
 
