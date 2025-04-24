@@ -6,7 +6,7 @@ from storage import add_to_csv
 import streamlit as st
 
 
-moralis = st.secrets['MORALIS']
+moralis = st.secrets['moralis_key']
 
 class price_with_interval:
     def __init__(self):
