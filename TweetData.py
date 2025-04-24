@@ -7,7 +7,7 @@ import pytz,re
 import json,os
 import streamlit as st
 
-bearerToken = st.secrets['BEARERTOKEN']
+bearerToken = st.secrets['bearer_token']
 
 class processor:
     def __init__(self) -> None: # Default 7 days TimeFrame
