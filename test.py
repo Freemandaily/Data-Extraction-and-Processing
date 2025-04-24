@@ -5,10 +5,10 @@ moralis = "eyJub25jZSI6IjBmZjJiMGYxLTE4ZDctNDFkMi05OGM1LTllZmYxOTNmZDJmZSIsIm9yZ
 
 url = f"https://solana-gateway.moralis.io/token/mainnet/pairs/{pair}/ohlcv?timeframe=5min&currency=usd&fromDate={from_date}&toDate={to_date}&limit=1000"
 
-    headers = {
-    "Accept": "application/json",
-    "X-API-Key": f"{moralis}"
-    }
+headers = {
+"Accept": "application/json",
+"X-API-Key": f"{moralis}"
+}
   
 response = requests.request("GET", url, headers=headers)
 st.write(response.status_code)
