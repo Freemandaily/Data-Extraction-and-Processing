@@ -26,8 +26,7 @@ def fetchPrice(pair,tweetDate,time_frame,timeframe_prices,get_start_price=None):
     "Accept": "application/json",
     "X-API-Key": f"{moralis}"
     }
-    st.write(moralis)
-    print(moralis)
+    
     try:
         if not timeframe_prices.token_interval_prices:
             response = requests.request("GET", url, headers=headers)
@@ -52,11 +51,13 @@ def fetchPrice(pair,tweetDate,time_frame,timeframe_prices,get_start_price=None):
                 low_price = price_data['low']
                 close_price = price_data['close']
                 st.write(close_price)
+                # st.write(moralis)
                 time.sleep(10)
                 return close_price
 
     except Exception as e:
         st.error('Failed To Fetch Token Price Data')
+        st.write(moralis)
         time.sleep(10)
         # print(f'Failed To Fetch Token Price Data')
         st.stop()
