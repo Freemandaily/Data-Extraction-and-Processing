@@ -1,5 +1,5 @@
 import requests
-import streamlit as st
+#import streamlit as st
 
 pair =  "Czfq3xZZDmsdGdUyrNLtRhGc47cXcZtLG4crryfu44zE"
 from_date = '2025-04-22' 
@@ -15,4 +15,5 @@ headers = {
 }
   
 response = requests.request("GET", url, headers=headers)
-st.write(response.status_code)
+# st.write(response.status_code)
+print(response.status_code)
