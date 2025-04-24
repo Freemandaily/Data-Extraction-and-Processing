@@ -26,7 +26,7 @@ def fetchPrice(pair,tweetDate,time_frame,timeframe_prices,get_start_price=None):
     try:
         if not timeframe_prices.token_interval_prices:
             response = requests.request("GET", url, headers=headers)
-            if response == 200:
+            if response != 200:
                 data = response.json()
                 Token_Price_datas = data.get('result',[])
                 timeframe_prices.token_interval_prices = Token_Price_datas
