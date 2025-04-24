@@ -21,5 +21,5 @@ This is an analyst Module Which serves the purpose of extracting  and Processing
 **This Tool is built with streamlit for easy access**
 - **Run ```streamlite run app.py```**
 - **Enter Influencer Username next timeFrame To Analyze. highest number of pages to retrieve is 300, adjust timeframe  accordingly**<br>
-  Note: The script uses jupiter project token list to matches the token symbol , you can try to match token symbols extensively by adding "No" to the "token_tweeted_analyzor" function call in "main.py"
+  Note: The script uses jupiter project token list to matches the token symbol , you can try to match token symbols extensively by choosing from "Search From"  section .
   
