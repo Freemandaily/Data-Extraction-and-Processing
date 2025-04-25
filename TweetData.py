@@ -7,12 +7,7 @@ import pytz,re
 import json
 import streamlit as st
 
-with open('key.json','r') as file:
-    keys = json.load(file)
-    bearerToken =keys['bearerToken']
-
-
-# bearerToken =st.secrets['bearer_token']
+bearerToken =st.secrets['bearer_token']
 
 class processor:
     def __init__(self) -> None: # Default 7 days TimeFrame
@@ -55,11 +50,6 @@ class processor:
 
     # Using X API to fetch user tweets
     def fetchTweets(self) -> list:
-        # user_tweets =  [{'created_at':'2025-04-22 14:27:35',
-        #                 'tweet_text':'ths is the man he said that kills $Ray $Sol $jup'},
-        #                 {'created_at':'2025-04-23 14:27:35',
-        #                 'tweet_text':'ths is the man he said that kills $bonk $jto'}
-        #                 ]
         if self.timeframe == 7:
             request_limit = 1
         else:
