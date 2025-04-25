@@ -22,16 +22,6 @@ with st.sidebar:
     at 5-minute,10-minute and 15-minuts interval to reveal the impact.
     """
 
-    # def stream():
-    #     for word in About.split(" "):
-    #         yield word + ' '
-    #         time.sleep(0.002)
-  
-    # @st.fragment       
-    # def display():
-    #     st.write_stream(stream())
-
-    # display()
     st.write(About)
 
 st.image('data-extract.png')
@@ -59,7 +49,7 @@ if st.button('Analyse Tweet'):
         st.stop()
     else:
         st.toast(f'@{username} Tweets Successfully Processed!')
-    # tweeted_token_details = {'2025-04-22 14:27:35':{'Token_names':['$sol','$ray','$wif','$jup'],'contracts':[]}}
+   
     
     # Fetchng tweeted token data
     with st.spinner('Fetching Tweeted Tokens and Price Datas. Please Wait.....'):
