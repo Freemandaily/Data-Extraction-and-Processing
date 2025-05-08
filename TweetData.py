@@ -135,6 +135,7 @@ class processor:
     
 
     def Fetch_Id_username_url(self,url): # This  get tweet id and user using the provided url
+        url = url.lower()
         if url.startswith('https://x.com/'):
             try:
                 tweet_id = url.split('/')[-1]
