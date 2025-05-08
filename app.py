@@ -6,14 +6,20 @@ from priceFeed import token_tweeted_analyzor
 from storage import add_to_csv
 
 
+class search_state():
+    def __init__(self):
+        self.search_with = None
+
+search = search_state()
 
 st.header('Data-Extraction and Processing')
 with st.sidebar:
     st.title('Data Configuration')
-    username = st.text_input('Enter Influencer X handle\n')
+    username_url = st.text_input('Enter X Handle Or Tweet Url(Https://..\n')
     timeframe = st.selectbox('Choose A TimeFrame',[7,30,90])
     token_choice = st.radio('Search From',['Strict Token','All Tokens'])
     st.divider()
+    contracts_input = st.text_area('Enter Contracts',placeholder='4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R\7GCihgDB8fe6KNjn2MYtkzZcRjQy3t9GHdC8uHYmW2hr')
     st.subheader('About')
     About = """
     The Analyst module is tool designed to analyse the impact of influencer tweet on a particular solana based token.
@@ -28,28 +34,71 @@ st.image('data-extract.png')
 
 
 
-if st.button('Analyse Tweet'):
-    process = processor()
-    if not username:
-        st.error('Please Enter A Username')
-        st.stop()
-    else:
-        with st.spinner(f'Loading @{username} Handle'):
-            userHandler = process.Load_user(username,timeframe=timeframe) 
+
+def loadsearch():
+    if search.search_with == 'handle':
+        with st.spinner(f'Loading @{username_url} Handle'):
+            userHandler = process.Load_user(username_url,timeframe=timeframe) 
         if 'Error' in userHandler:
             st.error(userHandler['Error'])
             st.stop() 
-        pass
-            
-    with st.spinner(f'Processing @{username} Tweets'):
-        tweeted_token_details = process.processTweets()
+        
+        with st.spinner(f'Processing @{username_url} Tweets'):
+            process.fetchTweets()
+            tweeted_token_details = process.processTweets()
+    elif search.search_with == 'link':
+         with st.spinner(f'Processing  Tweets in Url......'):
+            process.search_with_id(username_url)
+            tweeted_token_details = process.processTweets()
+    elif search.search_with == 'Contracts':
+        with st.spinner(f'Processing  Tweets Containing The Contracts......'):
+            process.search_tweet_with_contract(contracts_input.split('\n'))
+            tweeted_token_details = process.processTweets()
+    
+    return tweeted_token_details
+    
+    
+        
+if len(username_url) > 0 and len(contracts_input) > 0:
+    search_option = st.selectbox(
+        'Multiple Search Input Detected Choose How To Search',
+        ('Search Only With X handle/Url','Search Only With Contracts'),
+        index=None,
+        placeholder='Choose Search Option'
+        )
+    if search_option == 'Search Only With X handle/Url':
+        username_url = username_url.upper()
+        if username_url.startswith('HTTP'):
+            search.search_with = 'link'
+        else:
+            search.search_with = 'handle'
+    elif search_option == 'Search Only With Contracts':
+        search.search_with = 'Contracts'
+
+elif len(username_url) > 0 and len(contracts_input) == 0:
+    username_url = username_url.upper()
+    if username_url.startswith('HTTP'):
+        search.search_with = 'link'
+    else:
+        search.search_with = 'handle'
+elif len(contracts_input) > 0 and len(username_url) == 0:
+    search.search_with = 'Contracts'
+else:
+    st.error('Please Enter Where To Search From')
+    st.stop()
+
+ 
+if st.button('Analyse Tweet'):
+    process = processor()
+
+    tweeted_token_details = loadsearch()
 
     if 'Error' in tweeted_token_details:
         st.error(tweeted_token_details['Error'])
         st.stop()
     else:
-        st.toast(f'@{username} Tweets Successfully Processed!')
-   
+        st.toast(f'{search.search_with} Tweets Successfully Processed!')  # chnange this
+    # tweeted_token_details = {'2025-04-22 14:27:35':{'Token_names':['$sol','$ray','$wif','$jup'],'contracts':[]}}
     
     # Fetchng tweeted token data
     with st.spinner('Fetching Tweeted Tokens and Price Datas. Please Wait.....'):
@@ -59,7 +108,7 @@ if st.button('Analyse Tweet'):
         st.stop()
 
     with st.spinner('Storing Tweeted Token(s) Data'):  
-        df_data = add_to_csv(username,analyzor)  # Adding the tweeted token to cs file
+        df_data = add_to_csv(analyzor)  # Adding the tweeted token to cs file
     if 'Error' in df_data:
         st.error(df_data['Error'])
         st.stop()

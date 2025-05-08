@@ -4,7 +4,7 @@ import time
 import pandas as pd
 import streamlit as st
 
-def add_to_csv(Influencer_name:str,tweeted_token:dict)->None:
+def add_to_csv(tweeted_token:dict)->None:
     tweeted_token = { date:value for date,value in tweeted_token.items() if value}
     if tweeted_token:
         st.toast('Adding Tweeted Token Data To Cvs File!')
@@ -20,7 +20,7 @@ def add_to_csv(Influencer_name:str,tweeted_token:dict)->None:
     for date,info in tweeted_token.items():
         for token_address,token_data in info.items():
             Influencer_data = {
-                    "Influencer": f'@{Influencer_name}',
+                    "Influencer": token_data['username'],#f'@{Influencer_name}',
                     "Token": token_data['symbol'],
                     "Address": f'{token_address[:3]}...{token_address[-3:]}',
                     "Tweet Date": date[:10] ,
