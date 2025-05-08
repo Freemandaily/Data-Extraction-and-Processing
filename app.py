@@ -1,4 +1,6 @@
+from datetime import datetime
 import time
+import pytz
 import streamlit as st
 import sys
 from TweetData import processor
@@ -15,11 +17,14 @@ search = search_state()
 st.header('Data-Extraction and Processing')
 with st.sidebar:
     st.title('Data Configuration')
-    username_url = st.text_input('Enter X Handle Or Tweet Url(Https://..\n')
+    username_url = st.text_input('Enter X Handle Or Tweet Url (Https://..\n')
     timeframe = st.selectbox('Choose A TimeFrame',[7,30,90])
     token_choice = st.radio('Search From',['Strict Token','All Tokens'])
+    
     st.divider()
     contracts_input = st.text_area('Enter Contracts',placeholder='4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R\n7GCihgDB8fe6KNjn2MYtkzZcRjQy3t9GHdC8uHYmW2hr')
+    choose_date = st.date_input(label='Choose A Date',value='today')
+    choose_time = st.time_input('Choose Time',value=None,step=300)
     st.subheader('About')
     About = """
     The Analyst module is tool designed to analyse the impact of influencer tweet on a particular solana based token.
@@ -51,8 +56,15 @@ def loadsearch():
             process.search_with_id(username_url)
             tweeted_token_details = process.processTweets()
     elif search.search_with == 'Contracts':
+        if choose_date and choose_time:
+            combine = datetime.combine(choose_date,choose_time)
+            utc_datetime = combine.replace(tzinfo=pytz.UTC)
+            start_time = utc_datetime.isoformat().replace('+00:12',"z")
+        else:
+            st.error('Please Choose Date And Time')
+            st.stop()
         with st.spinner(f'Processing  Tweets Containing The Contracts......'):
-            process.search_tweet_with_contract(contracts_input.split('\n'))
+            process.search_tweet_with_contract(contracts_input.split('\n'),start_time)
             tweeted_token_details = process.processTweets()
     
     return tweeted_token_details

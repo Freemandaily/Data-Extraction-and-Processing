@@ -7,7 +7,12 @@ import pytz,re
 import json
 import streamlit as st
 
-bearerToken =st.secrets['bearer_token']
+with open('key.json','r') as file:
+    keys = json.load(file)
+    bearerToken =keys['bearerToken']
+
+
+# bearerToken =st.secrets['bearer_token']
 
 class processor:
     def __init__(self) -> None: # Default 7 days TimeFrame
@@ -136,6 +141,7 @@ class processor:
 
     def Fetch_Id_username_url(self,url): # This  get tweet id and user using the provided url
         url = url.lower()
+        print(url)
         if url.startswith('https://x.com/'):
             try:
                 tweet_id = url.split('/')[-1]
@@ -178,32 +184,33 @@ class processor:
             
 
 
-        
-    # def fetch_Input_Contracts(text_inputs):
-    #     contracts = [text for text in text_inputs if not text.startswith('0x') and len(text) >= 32]
-    #     print(contracts)
-    #     return contracts
 
-    def search_tweet_with_contract(self,text_inputs):
+    def search_tweet_with_contract(self,text_inputs,start_time):
         user_tweet = [ ]
-        contracts = [text for text in text_inputs if not text.startswith('0x') and len(text) >= 32]
-        if contracts:
-            for contract in contracts:
-                search = self.client.search_recent_tweets(contract,tweet_fields=['author_id','created_at'])
-                for search in search.data:
-                    user = self.client.get_user(id=search.author_id,user_fields=['username'])
-                    username = user.data.username
-                    tweet_dict = {
-                        'tweet_text':search.text,
-                        'created_at':search.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-                        'username':username
-                    }
-                    user_tweet.append(tweet_dict) # Should be in class
-                    # print(search.text)
-                    # print(search.author_id)
-                    # print(search.created_at)
-            self.tweets = user_tweet
-        else:
-            st.error('Please Enter only Solana Mint Token Contract (32 to 42 char)') 
-            st.stop()   
+        try:
+            contracts = [text for text in text_inputs if not text.startswith('0x') and len(text) >= 32]
+            if contracts:
+                for contract in contracts:
+                    search = self.client.search_recent_tweets(contract,tweet_fields=['author_id','created_at'],start_time=start_time)
+                    if search.data:
+                        for search in search.data:
+                            user = self.client.get_user(id=search.author_id,user_fields=['username'])
+                            username = user.data.username
+                            tweet_dict = {
+                                'tweet_text':search.text,
+                                'created_at':search.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+                                'username':username
+                            }
+                            user_tweet.append(tweet_dict) 
+                    else:
+                        st.error('No Tweet Contains The Contracts')
+                        st.stop()
+                self.tweets = user_tweet
+            else:
+                st.error('Please Enter only Solana Mint Token Contract (32 to 42 char)') 
+                st.stop()   
+        except Exception as e:
+            st.error(f'Error: Issuse is {e}')
+            st.stop()
+
 
