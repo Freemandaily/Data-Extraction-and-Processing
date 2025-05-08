@@ -7,18 +7,24 @@ import pytz,re
 import json
 import streamlit as st
 
-bearerToken =st.secrets['bearer_token']
+with open('key.json','r') as file:
+    keys = json.load(file)
+    bearerToken =keys['bearerToken']
+
+
+# bearerToken =st.secrets['bearer_token']
 
 class processor:
     def __init__(self) -> None: # Default 7 days TimeFrame
         self.client =  tweepy.Client(bearerToken)
-        self.client =  tweepy.Client(bearerToken)
+        #self.client =  tweepy.Client(bearerToken)
         self.username = None
         self.user = None
         self.user_id = None
         self.timeframe = None
         self.end_date = None
         self.start_date = None
+        self.tweets = None
     
     def Load_user(self,username,timeframe=7):
         self.username = username
@@ -50,6 +56,11 @@ class processor:
 
     # Using X API to fetch user tweets
     def fetchTweets(self) -> list:
+        # user_tweets =  [{'created_at':'2025-04-22 14:27:35',
+        #                 'tweet_text':'ths is the man he said that kills $Ray $Sol $jup'},
+        #                 {'created_at':'2025-04-23 14:27:35',
+        #                 'tweet_text':'ths is the man he said that kills $bonk $jto'}
+        #                 ]
         if self.timeframe == 7:
             request_limit = 1
         else:
@@ -64,19 +75,25 @@ class processor:
                                             max_results=100,
                                             limit=request_limit, # consider this
                                             tweet_fields='created_at'):
+                
                 if response.data:
                     for tweet in response.data:
+                        # print(tweet.created_at)
+                        # sys.exit()
                         tweet_dict = {
                             'tweet_id':tweet.id,
                             'tweet_text':tweet.text,
-                            'created_at':tweet.created_at.strftime("%Y-%m-%d %H:%M:%S")
+                            'created_at':tweet.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+                            'username': self.username
                         }
                         user_tweets.append(tweet_dict)
             #print(user_tweets)
-            return user_tweets
+            # return user_tweets
+            self.tweets = user_tweets
         except Exception as e:
             Error_message = {'Error':f'Failed To Fetch Tweets Because of  {e}\nUpgrade Your X Developer Plan or Wait For Sometimes'}
-            return Error_message
+            # return Error_message
+            self.tweets = Error_message
         
         
     # format the data to a suitable data type
@@ -84,7 +101,8 @@ class processor:
         details = {}
         for data in fetched_Token_details:
             details[data['date']] = { 'Token_names': data['token_details']['ticker_names'],
-                                       'contracts': data['token_details']['contracts']}
+                                       'contracts': data['token_details']['contracts'],
+                                       'username':data['username']}
         details = {date: tokenName_contract for date,tokenName_contract in details.items() if tokenName_contract['Token_names'] or tokenName_contract['contracts']}
         if details:
             st.toast('Tweets Containing Token Symbols Found!')
@@ -98,7 +116,7 @@ class processor:
         
     # Start procesing user tweet
     def processTweets(self)->dict: # Entry function
-        tweets = self.fetchTweets()
+        tweets = self.tweets
         if isinstance(tweets,dict) and 'Error' in tweets:
             return tweets # Error handlig for streamlit
         fetched_Token_details = []
@@ -107,6 +125,7 @@ class processor:
             for tweet in tweets:
                 token_details = self.fetchTicker_Contract(tweet['tweet_text'])
                 refined_details = {
+                    'username':tweet['username'],
                     'token_details': token_details,
                     'date': tweet['created_at']
                 }
@@ -116,3 +135,79 @@ class processor:
         else :
             Error_message = {'Error':f'Not Able To Process {self.username} Tweets! Please check I'}
             return Error_message
+        
+
+    
+
+    def Fetch_Id_username_url(self,url): # This  get tweet id and user using the provided url
+        if url.startswith('https://x.com/'):
+            try:
+                tweet_id = url.split('/')[-1]
+                username = url.split('/')[-3]
+                if len(tweet_id) == 19 and isinstance(int(tweet_id),int):
+                    return tweet_id,username #this should update the self.username
+                else:
+                    raise ValueError('Incorrect Tweet Id')
+            except ValueError as e:
+                print(f'Make Sure Url Contains Valid Tweet Id ')
+                # stoop the program
+                st.error(f'Make Sure Url Contains Valid Tweet Id ')
+                st.stop()
+        else:
+            print('Provide A Valid X Url')
+            st.error('Provide A Valid X Url')
+            st.stop()
+            # stop the program
+           
+        
+
+    def search_with_id(self,url):
+        tweet_id,username =  self.Fetch_Id_username_url(url)
+        try:
+            tweets = self.client.get_tweets(tweet_id,tweet_fields=['created_at'])
+            user_tweets = []
+            for tweet in tweets.data:
+                tweet_dict = {
+                    'tweet_text':tweet.text,
+                    'created_at':tweet.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+                    'username': username
+                    }
+                user_tweets.append(tweet_dict)
+            # return user_tweets
+            print(user_tweets)
+            self.tweets = user_tweets
+        except Exception as e:
+            Error_message = {'Error':f'Failed To Fetch Tweets Because of  {e}'} # this Error comes because of invali tweet id , configure correctly
+            self.tweets = Error_message
+            
+
+
+        
+    # def fetch_Input_Contracts(text_inputs):
+    #     contracts = [text for text in text_inputs if not text.startswith('0x') and len(text) >= 32]
+    #     print(contracts)
+    #     return contracts
+
+    def search_tweet_with_contract(self,text_inputs):
+        user_tweet = [ ]
+        contracts = [text for text in text_inputs if not text.startswith('0x') and len(text) >= 32]
+        if contracts:
+            for contract in contracts:
+                search = self.client.search_recent_tweets(contract,tweet_fields=['author_id','created_at'])
+                for search in search.data:
+                    user = self.client.get_user(id=search.author_id,user_fields=['username'])
+                    username = user.data.username
+                    tweet_dict = {
+                        'tweet_text':search.text,
+                        'created_at':search.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+                        'username':username
+                    }
+                    user_tweet.append(tweet_dict) # Should be in class
+                    # print(search.text)
+                    # print(search.author_id)
+                    # print(search.created_at)
+            self.tweets = user_tweet
+        else:
+            st.error('Please Enter only Solana Mint Token Contract (32 to 42 char)') 
+            st.stop()   
+
