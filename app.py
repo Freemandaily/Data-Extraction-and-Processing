@@ -19,7 +19,7 @@ with st.sidebar:
     timeframe = st.selectbox('Choose A TimeFrame',[7,30,90])
     token_choice = st.radio('Search From',['Strict Token','All Tokens'])
     st.divider()
-    contracts_input = st.text_area('Enter Contracts',placeholder='4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R\7GCihgDB8fe6KNjn2MYtkzZcRjQy3t9GHdC8uHYmW2hr')
+    contracts_input = st.text_area('Enter Contracts',placeholder='4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R\n7GCihgDB8fe6KNjn2MYtkzZcRjQy3t9GHdC8uHYmW2hr')
     st.subheader('About')
     About = """
     The Analyst module is tool designed to analyse the impact of influencer tweet on a particular solana based token.
