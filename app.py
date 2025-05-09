@@ -8,11 +8,30 @@ from priceFeed import token_tweeted_analyzor
 from storage import add_to_csv
 
 
+
 class search_state():
     def __init__(self):
         self.search_with = None
 
 search = search_state()
+
+
+def data_for_drawDown(tweeted_token):
+    tweeted_token = { date:value for date,value in tweeted_token.items() if value}
+        
+
+    handles_data = [ ]
+    for date ,info in tweeted_token.items():
+        for token_address,token_data in info.items():
+            influencer_data = {
+                'username' :token_data['username'],
+                'prices' : [token_data['Price_Tweeted_At'],token_data['price_5m'],token_data['price_10m']],
+                'token': token_data['symbol']
+            }
+            handles_data.append(influencer_data)
+    
+    st.session_state['handles_data'] = handles_data
+
 
 st.header('Data-Extraction and Processing')
 with st.sidebar:
@@ -25,6 +44,8 @@ with st.sidebar:
     contracts_input = st.text_area('Enter Contracts',placeholder='4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R\n7GCihgDB8fe6KNjn2MYtkzZcRjQy3t9GHdC8uHYmW2hr')
     choose_date = st.date_input(label='Choose A Date',value='today')
     choose_time = st.time_input('Choose Time',value=None,step=300)
+    st.divider()
+   
     st.subheader('About')
     About = """
     The Analyst module is tool designed to analyse the impact of influencer tweet on a particular solana based token.
@@ -36,8 +57,6 @@ with st.sidebar:
     st.write(About)
 
 st.image('data-extract.png')
-
-
 
 
 def loadsearch():
@@ -52,7 +71,7 @@ def loadsearch():
             process.fetchTweets()
             tweeted_token_details = process.processTweets()
     elif search.search_with == 'link':
-         with st.spinner(f'Processing  Tweets in Url......'):
+        with st.spinner(f'Processing  Tweets in Url......'):
             process.search_with_id(username_url)
             tweeted_token_details = process.processTweets()
     elif search.search_with == 'Contracts':
@@ -99,7 +118,8 @@ else:
     st.error('Please Enter Where To Search From')
     st.stop()
 
- 
+
+
 if st.button('Analyse Tweet'):
     process = processor()
 
@@ -109,7 +129,7 @@ if st.button('Analyse Tweet'):
         st.error(tweeted_token_details['Error'])
         st.stop()
     else:
-        st.toast(f'{search.search_with} Tweets Successfully Processed!')  # chnange this
+        st.toast(f'{search.search_with} Tweets Successfully Processed!')  
     # tweeted_token_details = {'2025-04-22 14:27:35':{'Token_names':['$sol','$ray','$wif','$jup'],'contracts':[]}}
     
     # Fetchng tweeted token data
@@ -132,6 +152,9 @@ if st.button('Analyse Tweet'):
     def convert_for_download(df_data):
         return df_data.to_csv().encode("utf-8")
     csv = convert_for_download(df_data)
+    st.session_state['analyzor'] = analyzor
+
+    
     st.download_button(
         label="Download CSV",
         data=csv,
@@ -139,4 +162,10 @@ if st.button('Analyse Tweet'):
         mime="text/csv",
         icon=":material/download:"
     )
+
+if 'analyzor' in st.session_state:
+    if st.button('Check DrawDown'):
+        handles_data = data_for_drawDown(st.session_state['analyzor'])
+        st.switch_page('drawdown.py')
+
 
