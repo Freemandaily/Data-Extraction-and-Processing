@@ -13,14 +13,14 @@ import asyncio
 import aiohttp
 import pandas as pd
 
-with open('key.json','r') as file:
-    keys = json.load(file)
-    bearerToken =keys['bearerToken']
+# with open('key.json','r') as file:
+#     keys = json.load(file)
+#     bearerToken =keys['bearerToken']
 
-# try:
-#     bearerToken =st.secrets['bearer_token']
-# except:
-#     bearerToken = os.environ.get('bearerToken')
+try:
+    bearerToken =st.secrets['bearer_token']
+except:
+    bearerToken = os.environ.get('bearerToken')
 
 class processor:
     def __init__(self) -> None: # Default 7 days TimeFrame
@@ -382,23 +382,23 @@ class contractProcessor():
         asyncio.run(self.main(timeframe))
     
     async def Fetch_PoolId_TokenId(self,session,network_id,pair):
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-            "Accept": "application/json"
-        }
-
         # headers = {
-        #         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/117.0",
-        #         "Accept": "application/json",
-        #         "Accept-Language": "en-US,en;q=0.5",
-        #         "Accept-Encoding": "gzip, deflate",
-        #         "Referer": "https://www.geckoterminal.com/",  # Important: sometimes required
-        #         "Origin": "https://www.geckoterminal.com",
-        #         "Connection": "keep-alive",
-        #         "Sec-Fetch-Dest": "empty",
-        #         "Sec-Fetch-Mode": "cors",
-        #         "Sec-Fetch-Site": "same-origin"
-        #     }
+        #     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        #     "Accept": "application/json"
+        # }
+
+        headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/117.0",
+                "Accept": "application/json",
+                "Accept-Language": "en-US,en;q=0.5",
+                "Accept-Encoding": "gzip, deflate",
+                "Referer": "https://www.geckoterminal.com/",  # Important: sometimes required
+                "Origin": "https://www.geckoterminal.com",
+                "Connection": "keep-alive",
+                "Sec-Fetch-Dest": "empty",
+                "Sec-Fetch-Mode": "cors",
+                "Sec-Fetch-Site": "same-origin"
+            }
 
         # headers = {
         #     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0",
@@ -428,23 +428,23 @@ class contractProcessor():
 
     async  def fetchNetworkId(self,session,address):
         # 
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-            "Accept": "application/json"
-        }
-
         # headers = {
-        #     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/117.0",
-        #     "Accept": "application/json",
-        #     "Accept-Language": "en-US,en;q=0.5",
-        #     "Accept-Encoding": "gzip, deflate",
-        #     "Referer": "https://www.geckoterminal.com/",  # Important: sometimes required
-        #     "Origin": "https://www.geckoterminal.com",
-        #     "Connection": "keep-alive",
-        #     "Sec-Fetch-Dest": "empty",
-        #     "Sec-Fetch-Mode": "cors",
-        #     "Sec-Fetch-Site": "same-origin"
-        #     }
+        #     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        #     "Accept": "application/json"
+        # }
+
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/117.0",
+            "Accept": "application/json",
+            "Accept-Language": "en-US,en;q=0.5",
+            "Accept-Encoding": "gzip, deflate",
+            "Referer": "https://www.geckoterminal.com/",  # Important: sometimes required
+            "Origin": "https://www.geckoterminal.com",
+            "Connection": "keep-alive",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-origin"
+            }
 
         # headers = {
         #     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0",
